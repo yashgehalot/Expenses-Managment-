@@ -1,0 +1,26 @@
+{
+  "name": "expense-management-app",
+  "version": "1.0.0",
+  "description": "Full-stack expense management application",
+  "main": "Backend1/server.js",
+  "scripts": {
+    "build": "cd \"Frontend 1\" && npm install && npm run build",
+    "start": "node Backend1/server.js",
+    "install-frontend": "cd \"Frontend 1\" && npm install",
+    "install-backend": "cd Backend1 && npm install",
+    "postinstall": "npm run install-backend && npm run install-frontend",
+    "dev": "concurrently \"npm run dev-backend\" \"npm run dev-frontend\"",
+    "dev-backend": "cd Backend1 && npm start",
+    "dev-frontend": "cd \"Frontend 1\" && npm run dev"
+  },
+  "keywords": ["expense", "management", "react", "nodejs", "mongodb"],
+  "author": "Yash Gehlot",
+  "license": "MIT",
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "concurrently": "^7.6.0"
+  }
+}
