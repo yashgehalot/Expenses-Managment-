@@ -1,2 +1,2 @@
-# Expenses-Managment-
+# Expenses-Managment
 Money Management 
