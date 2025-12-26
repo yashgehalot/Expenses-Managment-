@@ -1,5 +1,5 @@
 const bcrypt = require('bcryptjs');
-const User = require('../models/User'); // Import the model we just created
+const User = require('../models/user'); // Import the model we just created
 
 // @desc    Register a new user
 // @route   POST /api/users/register
