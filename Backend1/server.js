@@ -45,7 +45,8 @@ app.post('/api/day2-test', (req, res) => {
 // ============================================
 
 // --- SERVE REACT APP FOR ALL NON-API ROUTES ---
-app.get('*', (req, res) => {
+// Catch-all handler for client-side routing (must be last)
+app.get(/^\/(?!api).*/, (req, res) => {
   res.sendFile(path.join(__dirname, '../Frontend 1/dist/index.html'));
 });
 
