@@ -238,12 +238,13 @@ const Login = ({ onLogin }) => {
         </div>
       </div>
 
-      <style jsx>{`
-        @keyframes float {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-20px); }
-        }
-      `}</style>
+      {/* Change the tag at the end of Login.jsx */}
+       <style jsx="true">{`
+           @keyframes float {
+           0%, 100% { transform: translateY(0px); }
+           50% { transform: translateY(-20px); }
+            }
+           `}</style>
     </div>
   );
 };
