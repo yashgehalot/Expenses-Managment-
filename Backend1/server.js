@@ -33,10 +33,10 @@ app.use(express.static(frontendPath));
 
 // --- CATCH-ALL: FIXED FOR NODE v25 ---
 // Using ':path*' as a named parameter to avoid the "Missing parameter name" error
-app.get('/:path*', (req, res) => {
-    if (!req.url.startsWith('/api')) {
-        res.sendFile(path.join(frontendPath, 'index.html'));
-    }
+// --- CATCH-ALL: COMPATIBLE WITH NODE v25 ---
+// Using a Regular Expression to avoid the PathError entirely
+app.get(/^((?!\/api).)*$/, (req, res) => {
+    res.sendFile(path.join(frontendPath, 'index.html'));
 });
 
 // --- START SERVER ---
