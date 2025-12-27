@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import API_URL from '../constants';
 
 const Login = ({ onLogin }) => {
   const [formData, setFormData] = useState({ email: '', password: '' });
@@ -11,7 +12,7 @@ const Login = ({ onLogin }) => {
     setIsLoading(true);
     setMessage('');
     
-    const url = isRegister ? 'http://localhost:3000/api/auth/createuser' : 'http://localhost:3000/api/auth/login';
+    const url = isRegister ? `${API_URL}/api/auth/createuser` : `${API_URL}/api/auth/login`;
     const body = isRegister 
       ? { ...formData, name: formData.email.split('@')[0] } // simple name
       : formData;
@@ -26,7 +27,7 @@ const Login = ({ onLogin }) => {
       if (response.ok) {
         localStorage.setItem('token', data.authToken);
         // Fetch user details
-        const userResponse = await fetch('http://localhost:3000/api/auth/me', {
+        const userResponse = await fetch(`${API_URL}/api/auth/me`, {
           method: 'POST',
           headers: { 'Authorization': `Bearer ${data.authToken}` }
         });

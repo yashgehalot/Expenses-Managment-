@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import API_URL from './constants';
 
 import MyNavbar from './Components/MyNavbar';
 import Home from './Components/Home';
@@ -28,7 +29,7 @@ function App() {
     const token = localStorage.getItem('token');
     if (token) {
       // Fetch user details
-      fetch('http://localhost:3000/api/auth/me', {
+      fetch(`${API_URL}/api/auth/me`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` }
       })
@@ -60,7 +61,7 @@ function App() {
   // ADD: Saves a new expense and updates UI state
   const handleAddItem = async (newItem) => {
     try {
-      const response = await fetch('http://localhost:3000/api/expenses', {
+      const response = await fetch(`${API_URL}/api/expenses`, {
         method: 'POST',
         headers: getAuthHeaders(),
         body: JSON.stringify(newItem),
@@ -80,7 +81,7 @@ function App() {
   useEffect(() => {
     const fetchExpenses = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/expenses', {
+        const response = await fetch(`${API_URL}/api/expenses`, {
           headers: getAuthHeaders()
         });
         
@@ -100,7 +101,7 @@ function App() {
   // DELETE: Removes an expense and updates UI state
   const handleDeleteItem = async (id) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/expenses/${id}`, {
+      const response = await fetch(`${API_URL}/api/expenses/${id}`, {
         method: 'DELETE',
         headers: getAuthHeaders()
       });
