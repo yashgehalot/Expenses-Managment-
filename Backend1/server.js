@@ -33,10 +33,10 @@ app.use(express.static(path.join(__dirname, './Frontend 1/dist')));
 // --- CATCH-ALL: FIXED FOR NODE v25 ---
 // Using a named parameter ':path*' to avoid the PathError seen in your logs
 // This named parameter syntax is required for Node v25 + Express
-app.get('/:path*', (req, res) => {
-    if (!req.url.startsWith('/api')) {
-        res.sendFile(path.join(__dirname, './Frontend 1/dist/index.html'));
-    }
+// --- CATCH-ALL: COMPATIBLE WITH NODE v25 ---
+// Using a Regular Expression to catch all routes that don't start with /api
+app.get(/^(?!\/api).+/, (req, res) => {
+    res.sendFile(path.join(__dirname, './Frontend 1/dist/index.html'));
 });
 
 // --- START SERVER ---
