@@ -12,11 +12,11 @@ connectDB();
 const app = express();
 
 // --- MIDDLEWARE ---
-app.use(cors()); //
+app.use(cors()); // Safest for submission
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: false }));
 
-// --- API ROUTES (Define these BEFORE static files) ---
+// --- API ROUTES (Defined BEFORE static files to prevent 404s) ---
 app.use('/api/users', require('./routes/userRoutes'));
 app.use('/api/auth', require('./routes/auth')); 
 app.use('/api/expenses', require('./routes/expenses'));
@@ -27,13 +27,13 @@ app.get('/api/day1', (req, res) => {
 });
 
 // --- SERVE STATIC FILES (PRODUCTION) ---
-// Use path.resolve to ensure Render finds the folder correctly
+// Resolve the path relative to the Backend1 folder
 const frontendPath = path.resolve(__dirname, '../Frontend 1/dist');
 app.use(express.static(frontendPath));
 
-// --- CATCH-ALL: COMPATIBLE WITH NODE v25 ---
-// This serves the React app for any route that is NOT /api
-app.get('*', (req, res) => {
+// --- CATCH-ALL: FIXED FOR NODE v25 ---
+// Using ':path*' as a named parameter to avoid the "Missing parameter name" error
+app.get('/:path*', (req, res) => {
     if (!req.url.startsWith('/api')) {
         res.sendFile(path.join(frontendPath, 'index.html'));
     }
