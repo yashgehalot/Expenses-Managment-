@@ -1,69 +1,45 @@
 const express = require('express');
 const cors = require('cors'); 
-const dotenv = require('dotenv').config();
+require('dotenv').config(); //
 const connectDB = require('./Config/db'); 
 const path = require('path'); 
 
-// Use 5000 locally, but Render will provide its own PORT via environment variables
+// 1. MUST use process.env.PORT for Render
 const port = process.env.PORT || 5000; 
 
-connectDB(); 
+connectDB(); //
 
 const app = express();
 
 // --- MIDDLEWARE ---
 
-// Updated CORS to handle both Local and Production origins
-const allowedOrigins = [
-    'http://localhost:5173',
-    'https://your-backend-name.onrender.com' // Replace with your actual Render URL
-];
+// 2. SIMPLIFIED CORS: This is the safest way to avoid submission errors
+app.use(cors()); 
 
-app.use(cors({
-    origin: function (origin, callback) {
-        // allow requests with no origin (like mobile apps or curl requests)
-        if (!origin) return callback(null, true);
-        if (allowedOrigins.indexOf(origin) === -1) {
-            const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-            return callback(new Error(msg), false);
-        }
-        return callback(null, true);
-    },
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true // Helpful if you decide to use cookies/sessions later
-}));
-
-app.use(express.json());
+app.use(express.json()); //
 app.use(express.urlencoded({ extended: false }));
-
-// --- SERVE STATIC FILES ---
-// Ensure the path correctly points to your built frontend
-app.use(express.static(path.join(__dirname, '../Frontend 1/dist')));
 
 // --- API ROUTES ---
 app.use('/api/users', require('./routes/userRoutes'));
 app.use('/api/auth', require('./routes/auth')); 
 app.use('/api/expenses', require('./routes/expenses'));
 
+// Test Route
 app.get('/api/day1', (req, res) => {
     res.json({ message: "Backend Working!" });
 });
 
-app.post('/api/day2-test', (req, res) => {
-    const receivedData = req.body;
-    console.log("Day 2 POST Request Received:", receivedData);
-    res.status(201).json({
-        message: "Data received successfully!",
-        data: receivedData
-    });
-});
+// --- SERVE STATIC FILES (PRODUCTION) ---
+// 3. This serves your React app from the 'dist' folder
+app.use(express.static(path.join(__dirname, './Frontend 1/dist')));
 
-// --- CATCH-ALL ROUTE ---
-// This serves the React index.html for any route that isn't an /api route
-app.get(/^\/(?!api).*/, (req, res) => {
-  res.sendFile(path.join(__dirname, '../Frontend 1/dist/index.html'));
+// 4. CATCH-ALL: Important for React Router to work after deployment
+app.get('*', (req, res) => {
+    // If a request is NOT for /api, send the index.html
+    if (!req.url.startsWith('/api')) {
+        res.sendFile(path.join(__dirname, './Frontend 1/dist/index.html'));
+    }
 });
 
 // --- START SERVER ---
-app.listen(port, () => console.log(`Server started on port ${port}`));
+app.listen(port, () => console.log(`Server started on port ${port}`)); //
