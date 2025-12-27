@@ -16,7 +16,7 @@ app.use(cors()); //
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: false }));
 
-// --- API ROUTES ---
+// --- API ROUTES (Define these BEFORE static files) ---
 app.use('/api/users', require('./routes/userRoutes'));
 app.use('/api/auth', require('./routes/auth')); 
 app.use('/api/expenses', require('./routes/expenses'));
@@ -27,16 +27,16 @@ app.get('/api/day1', (req, res) => {
 });
 
 // --- SERVE STATIC FILES (PRODUCTION) ---
-// This serves your React app from the 'dist' folder
-app.use(express.static(path.join(__dirname, './Frontend 1/dist')));
+// Use path.resolve to ensure Render finds the folder correctly
+const frontendPath = path.resolve(__dirname, '../Frontend 1/dist');
+app.use(express.static(frontendPath));
 
-// --- CATCH-ALL: FIXED FOR NODE v25 ---
-// Using a named parameter ':path*' to avoid the PathError seen in your logs
-// This named parameter syntax is required for Node v25 + Express
 // --- CATCH-ALL: COMPATIBLE WITH NODE v25 ---
-// Using a Regular Expression to catch all routes that don't start with /api
-app.get(/^(?!\/api).+/, (req, res) => {
-    res.sendFile(path.join(__dirname, './Frontend 1/dist/index.html'));
+// This serves the React app for any route that is NOT /api
+app.get('*', (req, res) => {
+    if (!req.url.startsWith('/api')) {
+        res.sendFile(path.join(frontendPath, 'index.html'));
+    }
 });
 
 // --- START SERVER ---
